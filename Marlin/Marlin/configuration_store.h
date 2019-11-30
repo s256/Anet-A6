@@ -53,20 +53,12 @@ class MarlinSettings {
 
       #if ENABLED(AUTO_BED_LEVELING_UBL) // Eventually make these available if any leveling system
                                          // That can store is enabled
-<<<<<<< Updated upstream
-        FORCE_INLINE static int get_start_of_meshes() { return meshes_begin; }
-        FORCE_INLINE static int get_end_of_meshes() { return meshes_end; }
-        static int calc_num_meshes();
-        static void store_mesh(int8_t slot);
-        static void load_mesh(int8_t slot, void *into = 0);
-=======
         static uint16_t meshes_start_index();
         FORCE_INLINE static uint16_t meshes_end_index() { return meshes_end; }
         static uint16_t calc_num_meshes();
         static int mesh_slot_offset(const int8_t slot);
         static void store_mesh(const int8_t slot);
         static void load_mesh(const int8_t slot, void * const into=NULL);
->>>>>>> Stashed changes
 
         //static void delete_mesh();    // necessary if we have a MAT
         //static void defrag_meshes();  // "
@@ -92,14 +84,8 @@ class MarlinSettings {
 
       #if ENABLED(AUTO_BED_LEVELING_UBL) // Eventually make these available if any leveling system
                                          // That can store is enabled
-<<<<<<< Updated upstream
-        static int meshes_begin;
-        const static int meshes_end = E2END - 128; // 128 is a placeholder for the size of the MAT; the MAT will always
-                                                   // live at the very end of the eeprom
-=======
         static constexpr uint16_t meshes_end = E2END - 128; // 128 is a placeholder for the size of the MAT; the MAT will always
                                                             // live at the very end of the eeprom
->>>>>>> Stashed changes
 
       #endif
 

@@ -315,7 +315,7 @@ void CardReader::stopSDPrint(
   #if ENABLED(ADVANCED_PAUSE_FEATURE)
     did_pause_print = 0;
   #endif
-  sdprinting = false;
+  sdprinting = abort_sd_printing = false;
   if (isFileOpen()) file.close();
   #if SD_RESORT
     if (re_sort) presort();
@@ -897,10 +897,6 @@ void CardReader::printingHasFinished() {
   }
   else {
     sdprinting = false;
-<<<<<<< Updated upstream
-    if (SD_FINISHED_STEPPERRELEASE)
-      enqueue_and_echo_commands_P(PSTR(SD_FINISHED_RELEASECOMMAND));
-=======
 
     #if ENABLED(POWER_LOSS_RECOVERY)
       removeJobRecoveryFile();
@@ -909,7 +905,6 @@ void CardReader::printingHasFinished() {
     #if ENABLED(SD_FINISHED_STEPPERRELEASE) && defined(SD_FINISHED_RELEASECOMMAND)
       planner.finish_and_disable();
     #endif
->>>>>>> Stashed changes
     print_job_timer.stop();
     if (print_job_timer.duration() > 60)
       enqueue_and_echo_commands_P(PSTR("M31"));

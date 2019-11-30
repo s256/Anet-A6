@@ -289,14 +289,7 @@
 
   void unified_bed_leveling::G29() {
 
-<<<<<<< Updated upstream
-    if (!settings.calc_num_meshes()) {
-      SERIAL_PROTOCOLLNPGM("?Enable EEPROM and init with M502, M500.\n");
-      return;
-    }
-=======
     if (g29_parameter_parsing()) return; // Abort on parameter error
->>>>>>> Stashed changes
 
     const int8_t p_val = parser.intval('P', -1);
     const bool may_move = p_val == 1 || p_val == 2 || p_val == 4 || parser.seen('J');
@@ -1294,8 +1287,8 @@
     out_mesh.distance = -99999.9f;
 
     // Get our reference position. Either the nozzle or probe location.
-    const float px = rx - (probe_as_reference == USE_PROBE_AS_REFERENCE ? X_PROBE_OFFSET_FROM_EXTRUDER : 0),
-                py = ry - (probe_as_reference == USE_PROBE_AS_REFERENCE ? Y_PROBE_OFFSET_FROM_EXTRUDER : 0);
+    const float px = rx + (probe_as_reference == USE_PROBE_AS_REFERENCE ? X_PROBE_OFFSET_FROM_EXTRUDER : 0),
+                py = ry + (probe_as_reference == USE_PROBE_AS_REFERENCE ? Y_PROBE_OFFSET_FROM_EXTRUDER : 0);
 
     float best_so_far = 99999.99f;
 

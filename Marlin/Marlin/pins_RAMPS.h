@@ -56,12 +56,16 @@
 // Servos
 //
 #ifdef IS_RAMPS_13
-  #define SERVO0_PIN        7   // RAMPS_13 // Will conflict with BTN_EN2 on LCD_I2C_VIKI
+  #define SERVO0_PIN        7   // RAMPS_13
 #else
   #define SERVO0_PIN       11
 #endif
-#define SERVO1_PIN          6
-#define SERVO2_PIN          5
+#ifndef SERVO1_PIN
+  #define SERVO1_PIN        6
+#endif
+#ifndef SERVO2_PIN
+  #define SERVO2_PIN        5
+#endif
 #ifndef SERVO3_PIN
   #define SERVO3_PIN        4
 #endif
@@ -161,31 +165,75 @@
    * Software serial
    */
 
-  #define X_SERIAL_TX_PIN    40
-  #define X_SERIAL_RX_PIN    63
-  #define X2_SERIAL_TX_PIN   -1
-  #define X2_SERIAL_RX_PIN   -1
+  #ifndef X_SERIAL_TX_PIN
+    #define X_SERIAL_TX_PIN  40
+  #endif
+  #ifndef X_SERIAL_RX_PIN
+    #define X_SERIAL_RX_PIN  63
+  #endif
+  #ifndef X2_SERIAL_TX_PIN
+    #define X2_SERIAL_TX_PIN -1
+  #endif
+  #ifndef X2_SERIAL_RX_PIN
+    #define X2_SERIAL_RX_PIN -1
+  #endif
 
-  #define Y_SERIAL_TX_PIN    59
-  #define Y_SERIAL_RX_PIN    64
-  #define Y2_SERIAL_TX_PIN   -1
-  #define Y2_SERIAL_RX_PIN   -1
+  #ifndef Y_SERIAL_TX_PIN
+    #define Y_SERIAL_TX_PIN  59
+  #endif
+  #ifndef Y_SERIAL_RX_PIN
+    #define Y_SERIAL_RX_PIN  64
+  #endif
+  #ifndef Y2_SERIAL_TX_PIN
+    #define Y2_SERIAL_TX_PIN -1
+  #endif
+  #ifndef Y2_SERIAL_RX_PIN
+    #define Y2_SERIAL_RX_PIN -1
+  #endif
 
-  #define Z_SERIAL_TX_PIN    42
-  #define Z_SERIAL_RX_PIN    65
-  #define Z2_SERIAL_TX_PIN   -1
-  #define Z2_SERIAL_RX_PIN   -1
+  #ifndef Z_SERIAL_TX_PIN
+    #define Z_SERIAL_TX_PIN  42
+  #endif
+  #ifndef Z_SERIAL_RX_PIN
+    #define Z_SERIAL_RX_PIN  65
+  #endif
+  #ifndef Z2_SERIAL_TX_PIN
+    #define Z2_SERIAL_TX_PIN -1
+  #endif
+  #ifndef Z2_SERIAL_RX_PIN
+    #define Z2_SERIAL_RX_PIN -1
+  #endif
 
-  #define E0_SERIAL_TX_PIN   44
-  #define E0_SERIAL_RX_PIN   66
-  #define E1_SERIAL_TX_PIN   -1
-  #define E1_SERIAL_RX_PIN   -1
-  #define E2_SERIAL_TX_PIN   -1
-  #define E2_SERIAL_RX_PIN   -1
-  #define E3_SERIAL_TX_PIN   -1
-  #define E3_SERIAL_RX_PIN   -1
-  #define E4_SERIAL_TX_PIN   -1
-  #define E4_SERIAL_RX_PIN   -1
+  #ifndef E0_SERIAL_TX_PIN
+    #define E0_SERIAL_TX_PIN 44
+  #endif
+  #ifndef E0_SERIAL_RX_PIN
+    #define E0_SERIAL_RX_PIN 66
+  #endif
+  #ifndef E1_SERIAL_TX_PIN
+    #define E1_SERIAL_TX_PIN -1
+  #endif
+  #ifndef E1_SERIAL_RX_PIN
+    #define E1_SERIAL_RX_PIN -1
+  #endif
+  #ifndef E2_SERIAL_TX_PIN
+    #define E2_SERIAL_TX_PIN -1
+  #endif
+  #ifndef E2_SERIAL_RX_PIN
+    #define E2_SERIAL_RX_PIN -1
+  #endif
+  #ifndef E3_SERIAL_TX_PIN
+    #define E3_SERIAL_TX_PIN -1
+  #endif
+  #ifndef E3_SERIAL_RX_PIN
+    #define E3_SERIAL_RX_PIN -1
+  #endif
+  #ifndef E4_SERIAL_TX_PIN
+    #define E4_SERIAL_TX_PIN -1
+  #endif
+  #ifndef E4_SERIAL_RX_PIN
+    #define E4_SERIAL_RX_PIN -1
+  #endif
 #endif
 
 //
@@ -371,15 +419,9 @@
 
     #else
 
-<<<<<<< Updated upstream
-      #if ENABLED(MKS_12864OLED)
-        #define LCD_PINS_DC     25 // Set as output on init
-        #define LCD_PINS_RS     27 // Pull low for 1s to init
-=======
       #if ENABLED(MKS_12864OLED) || ENABLED(MKS_12864OLED_SSD1306)
         #define LCD_PINS_DC     25   // Set as output on init
         #define LCD_PINS_RS     27   // Pull low for 1s to init
->>>>>>> Stashed changes
         // DOGM SPI LCD Support
         #define DOGLCD_CS       16
         #define DOGLCD_MOSI     17
@@ -454,8 +496,8 @@
 
     #elif ENABLED(LCD_I2C_VIKI)
 
-      #define BTN_EN1           22   // http://files.panucatt.com/datasheets/viki_wiring_diagram.pdf explains 40/42.
-      #define BTN_EN2            7   // 22/7 are unused on RAMPS_14. 22 is unused and 7 the SERVO0_PIN on RAMPS_13.
+      #define BTN_EN1           40   // http://files.panucatt.com/datasheets/viki_wiring_diagram.pdf explains 40/42.
+      #define BTN_EN2           42   // for sake of the wiring diagram for RAMPS 1.4 we keep 40/42, confirmed working.
       #define BTN_ENC           -1
 
       #define LCD_SDSS          SDSS
@@ -515,7 +557,7 @@
       #define BTN_ENC           35
 
       #define SD_DETECT_PIN     49
-      #define KILL_PIN          64
+      #define KILL_PIN          41
 
     #elif ENABLED(MINIPANEL)
 
@@ -576,16 +618,3 @@
   #endif // NEWPANEL
 
 #endif // ULTRA_LCD
-// ANET A6 Full graphic display with rotary encoder on Ext1
-// This needs an adapter! VCC and GND is reversed on the Anet display!!
-// 28.06.2018 NeoCortex / JulixPawel@gmail.com
-#if ENABLED(ANET_FULL_GRAPHICS_LCD)
-  #define LCD_PINS_RS         35 // CS chip select /SS chip slave select
-  #define LCD_PINS_ENABLE     16 // SID (MOSI)
-  #define LCD_PINS_D4         25 // SCK (CLK) clock
-  #define KILL_PIN            29 // reset
-  #define BTN_EN1             27 // encoder left
-  #define BTN_EN2             23 // encoder right
-  #define BTN_ENC             17 // encoder click
-  #define BEEPER_PIN          37 // beeper
-#endif

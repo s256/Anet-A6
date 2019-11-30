@@ -35,11 +35,7 @@
   /**
    * Marlin release version identifier
    */
-<<<<<<< Updated upstream
-  #define SHORT_BUILD_VERSION "1.1.7"
-=======
-  #define SHORT_BUILD_VERSION "1.1.9"
->>>>>>> Stashed changes
+  #define SHORT_BUILD_VERSION "bugfix-1.1.x"
 
   /**
    * Verbose version identifier which should contain a reference to the location
@@ -52,11 +48,7 @@
    * here we define this default string as the date where the latest release
    * version was tagged.
    */
-<<<<<<< Updated upstream
-  #define STRING_DISTRIBUTION_DATE "2017-12-15 12:00"
-=======
-  #define STRING_DISTRIBUTION_DATE "2018-08-01"
->>>>>>> Stashed changes
+  #define STRING_DISTRIBUTION_DATE "2018-07-31"
 
   /**
    * Required minimum Configuration.h and Configuration_adv.h file versions.
