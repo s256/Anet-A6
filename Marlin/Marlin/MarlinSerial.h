@@ -21,16 +21,16 @@
  */
 
 /**
-  MarlinSerial.h - Hardware serial library for Wiring
-  Copyright (c) 2006 Nicholas Zambetti.  All right reserved.
+ * MarlinSerial.h - Hardware serial library for Wiring
+ * Copyright (c) 2006 Nicholas Zambetti.  All right reserved.
+ *
+ * Modified 28 September 2010 by Mark Sproul
+ * Modified 14 February 2016 by Andreas Hardtung (added tx buffer)
+ * Modified 01 October 2017 by Eduardo José Tagle (added XON/XOFF)
+ */
 
-  Modified 28 September 2010 by Mark Sproul
-  Modified 14 February 2016 by Andreas Hardtung (added tx buffer)
-
-*/
-
-#ifndef MARLINSERIAL_H
-#define MARLINSERIAL_H
+#ifndef _MARLINSERIAL_H_
+#define _MARLINSERIAL_H_
 
 #include "MarlinConfig.h"
 
@@ -60,6 +60,9 @@
 #define M_TXCx             SERIAL_REGNAME(TXC,SERIAL_PORT,)
 #define M_RXCIEx           SERIAL_REGNAME(RXCIE,SERIAL_PORT,)
 #define M_UDREx            SERIAL_REGNAME(UDRE,SERIAL_PORT,)
+#define M_FEx              SERIAL_REGNAME(FE,SERIAL_PORT,)
+#define M_DORx             SERIAL_REGNAME(DOR,SERIAL_PORT,)
+#define M_UPEx             SERIAL_REGNAME(UPE,SERIAL_PORT,)
 #define M_UDRIEx           SERIAL_REGNAME(UDRIE,SERIAL_PORT,)
 #define M_UDRx             SERIAL_REGNAME(UDR,SERIAL_PORT,)
 #define M_UBRRxH           SERIAL_REGNAME(UBRR,SERIAL_PORT,H)
@@ -86,6 +89,7 @@
   #define TX_BUFFER_SIZE 32
 #endif
 
+<<<<<<< Updated upstream
 #ifndef USBCON
   #if ENABLED(SERIAL_XON_XOFF) && RX_BUFFER_SIZE < 1024
     #error "SERIAL_XON_XOFF requires RX_BUFFER_SIZE >= 1024 for reliable transfers without drops."
@@ -98,6 +102,9 @@
   #if TX_BUFFER_SIZE && (TX_BUFFER_SIZE < 2 || TX_BUFFER_SIZE > 256 || !IS_POWER_OF_2(TX_BUFFER_SIZE))
     #error "TX_BUFFER_SIZE must be 0, a power of 2 greater than 1, and no greater than 256."
   #endif
+=======
+#if USE_MARLINSERIAL
+>>>>>>> Stashed changes
 
   #if RX_BUFFER_SIZE > 256
     typedef uint16_t ring_buffer_pos_t;
@@ -109,11 +116,19 @@
     extern uint8_t rx_dropped_bytes;
   #endif
 
+  #if ENABLED(SERIAL_STATS_RX_BUFFER_OVERRUNS)
+    extern uint8_t rx_buffer_overruns;
+  #endif
+
+  #if ENABLED(SERIAL_STATS_RX_FRAMING_ERRORS)
+    extern uint8_t rx_framing_errors;
+  #endif
+
   #if ENABLED(SERIAL_STATS_MAX_RX_QUEUED)
     extern ring_buffer_pos_t rx_max_enqueued;
   #endif
 
-  class MarlinSerial { //: public Stream
+  class MarlinSerial {
 
     public:
       MarlinSerial() {};
@@ -123,27 +138,25 @@
       static int read(void);
       static void flush(void);
       static ring_buffer_pos_t available(void);
-      static void checkRx(void);
       static void write(const uint8_t c);
-      #if TX_BUFFER_SIZE > 0
-        static uint8_t availableForWrite(void);
-        static void flushTX(void);
-      #endif
-      static void writeNoHandshake(const uint8_t c);
+      static void flushTX(void);
 
       #if ENABLED(SERIAL_STATS_DROPPED_RX)
         FORCE_INLINE static uint32_t dropped() { return rx_dropped_bytes; }
+      #endif
+
+      #if ENABLED(SERIAL_STATS_RX_BUFFER_OVERRUNS)
+        FORCE_INLINE static uint32_t buffer_overruns() { return rx_buffer_overruns; }
+      #endif
+
+      #if ENABLED(SERIAL_STATS_RX_FRAMING_ERRORS)
+        FORCE_INLINE static uint32_t framing_errors() { return rx_framing_errors; }
       #endif
 
       #if ENABLED(SERIAL_STATS_MAX_RX_QUEUED)
         FORCE_INLINE static ring_buffer_pos_t rxMaxEnqueued() { return rx_max_enqueued; }
       #endif
 
-    private:
-      static void printNumber(unsigned long, const uint8_t);
-      static void printFloat(double, uint8_t);
-
-    public:
       FORCE_INLINE static void write(const char* str) { while (*str) write(*str++); }
       FORCE_INLINE static void write(const uint8_t* buffer, size_t size) { while (size--) write(*buffer++); }
       FORCE_INLINE static void print(const String& s) { for (int i = 0; i < (int)s.length(); i++) write(s[i]); }
@@ -167,15 +180,20 @@
       static void println(unsigned long, int = DEC);
       static void println(double, int = 2);
       static void println(void);
+      operator bool() { return true; }
+
+    private:
+      static void printNumber(unsigned long, const uint8_t);
+      static void printFloat(double, uint8_t);
   };
 
   extern MarlinSerial customizedSerial;
 
-#endif // !USBCON
+#endif // USE_MARLINSERIAL
 
 // Use the UART for Bluetooth in AT90USB configurations
-#if defined(USBCON) && ENABLED(BLUETOOTH)
+#if !USE_MARLINSERIAL && ENABLED(BLUETOOTH)
   extern HardwareSerial bluetoothSerial;
 #endif
 
-#endif // MARLINSERIAL_H
+#endif // _MARLINSERIAL_H_
